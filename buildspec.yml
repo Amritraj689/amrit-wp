@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+        php: 7.4
+  pre_build:
+    commands:
+      - echo Running Pre-Build script...
+      - chmod +x codebuild/*
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo "Building Code.."
+  post_build:
+    commands:
+      - echo Build completed on `date`
