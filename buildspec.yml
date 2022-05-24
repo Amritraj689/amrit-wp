@@ -1,5 +1,7 @@
 version: 0.2
-
+env:
+  parameter-store:
+    WP_CONFIG: "/amrit/wp-config"
 phases:
   install:
     runtime-versions:
@@ -11,7 +13,7 @@ phases:
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
-      - echo "Building Code.."
+      - echo $WP_CONFIG > wp-config.php
   post_build:
     commands:
       - echo Build completed on `date`
