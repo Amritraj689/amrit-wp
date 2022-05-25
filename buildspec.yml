@@ -1,7 +1,10 @@
 version: 0.2
 env:
   parameter-store:
-    WP_CONFIG: "/amrit/wp-config"
+    DB_USER: "/amrit/User"
+    DB_PASS: "/amrit/dbPass"
+    DB_URL: "/amrit/dbUrl"
+    DB_NAME: "/amrit/dbName"
 phases:
   install:
     runtime-versions:
@@ -14,7 +17,12 @@ phases:
   build:
     commands:
       - rm -rf wp-content
-      - echo $WP_CONFIG > wp-config.php
+      - cp wp-config-sample.php wp-config.php
+      - sed -i 's/username_here/$DB_USER/g'  wp-config.php
+      - sed -i 's/password_here/$DB_PASS/g'  wp-config.php
+      - sed -i 's/localhost/$DB_URL/g'  wp-config.php
+      - sed -i 's/database_name_here/$DB_NAME/g'  wp-config.php
+      
   post_build:
     commands:
       - echo Build completed on `date`
