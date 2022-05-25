@@ -13,6 +13,7 @@ phases:
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
+      - rm -rf wp-content
       - echo $WP_CONFIG > wp-config.php
   post_build:
     commands:
