@@ -1,31 +1,18 @@
 version: 0.2
-env:
-  parameter-store:
-    DB_USER: "/amrit/User"
-    DB_PASS: "/amrit/dbPass"
-    DB_URL: "/amrit/dbUrl"
-    DB_NAME: "/amrit/dbName"
+
 phases:
-  install:
-    runtime-versions:
-        php: 7.4
   pre_build:
     commands:
-      - echo Running Pre-Build script...
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      - rm -rf wp-content
-      - cp wp-config-sample.php wp-config.php
-      - sed -i "s/username_here/$DB_USER/g"  wp-config.php
-      - sed -i "s/password_here/$DB_PASS/g"  wp-config.php
-      - sed -i "s/localhost/$DB_URL/g"  wp-config.php
-      - sed -i "s/database_name_here/$DB_NAME/g"  wp-config.php
-      
+      - echo Build started on `date`
+      - echo Building the Docker image...          
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
   post_build:
     commands:
       - echo Build completed on `date`
-artifacts:
-  files:
-    - '**/*'
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
