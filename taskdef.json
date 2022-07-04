@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "amrit-frontend",
-            "image": "amrit-frontend",
+            "image": "421320058418.dkr.ecr.ap-south-1.amazonaws.com/amrit-frontend",
             "essential": true,
             "portMappings": [
                 {
