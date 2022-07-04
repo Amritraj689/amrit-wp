@@ -1,0 +1,24 @@
+{
+    "executionRoleArn": "arn:aws:iam::421320058418:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "amrit-frontend",
+            "image": "421320058418.dkr.ecr.ap-south-1.amazonaws.com/amrit-frontend",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "containerPort": 80
+                }
+            ]
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "256",
+    "memory": "512",
+    "family": "LINUX"
+}
